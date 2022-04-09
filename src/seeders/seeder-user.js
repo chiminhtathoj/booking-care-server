@@ -10,8 +10,9 @@ module.exports = {
       lastName: "vo",
       address: "291 cua dai",
       gender: 1,
-      typeRole: "ROLE",
-      keyRole: "R1"
+      roleId: "1",
+      image: "string",
+      positionId: "1"
     }], {});
   },
 
