@@ -25,11 +25,26 @@ const createNewUser = (data) => {
     })
 }
 
+const getAllUser = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const data = await db.User.findAll({
+                raw: true
+            })
+            resolve(data)
+        } catch (error) {
+            console.log(error)
+            reject()
+        }
+    })
+}
+
 const hashPassword = (password) => {
     const hashPassword = bcrypt.hashSync(password, salt);
     return hashPassword
 }
 
 module.exports = {
-    createNewUser
+    createNewUser,
+    getAllUser
 }

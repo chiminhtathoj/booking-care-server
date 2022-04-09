@@ -8,16 +8,16 @@ const getHomePage = async (req, res) => {
         return res.render("homePage.ejs", {
             data: JSON.stringify(data)
         })
-    } catch (err) {
-        throw err
+    } catch (error) {
+        console.log(error)
     }
 }
 const getCrud = async (req, res) => {
     try {
         return res.render("crud.ejs");
     }
-    catch (err) {
-        throw err
+    catch (error) {
+        console.log(error)
     }
 }
 const postCrud = async (req, res) => {
@@ -27,13 +27,25 @@ const postCrud = async (req, res) => {
         return res.send(JSON.stringify(req.body));
 
     }
-    catch (err) {
-        throw err
+    catch (error) {
+        console.log(error)
+    }
+}
+
+const displayCrud = async (req, res) => {
+    try {
+        const data = await CRUDservice.getAllUser()
+        return res.render("displayUser.ejs", {
+            data
+        })
+    } catch (error) {
+        console.log(error)
     }
 }
 
 module.exports = {
     getHomePage,
     getCrud,
-    postCrud
+    postCrud,
+    displayCrud
 }
