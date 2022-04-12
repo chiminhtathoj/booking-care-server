@@ -11,7 +11,8 @@ const initWebRoutes = (app) => {
     router.get("/displayCrud", homeController.displayCrud)
     router.get("/edit-crud", homeController.getEditCrud)
     router.post("/put-crud", homeController.putUpdateCrud)
-    // router.get("/put-crud", homeController.getUpdateCrud)
+    router.get("/delete-crud", homeController.getDeleteCrud)
+
     return app.use("/", router)
 }
 

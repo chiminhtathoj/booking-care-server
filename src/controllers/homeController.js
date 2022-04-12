@@ -65,11 +65,23 @@ const putUpdateCrud = async (req, res) => {
         const userinfo = req.body
         if (userinfo) {
             const data = await CRUDservice.editUserById(userinfo)
-            console.log(data)
             return res.render("displayUser.ejs", { data })
         }
         else
             return res.send("Sai thong tin")
+    } catch (error) {
+        console.log(error)
+    }
+}
+const getDeleteCrud = async (req, res) => {
+    try {
+        const id = parseInt(req.query.id)
+        if (id) {
+            await CRUDservice.deleteUserById(id)
+            res.send("Deleted")
+        } else {
+            res.send("User not found")
+        }
     } catch (error) {
         console.log(error)
     }
@@ -81,5 +93,6 @@ module.exports = {
     postCrud,
     displayCrud,
     getEditCrud,
-    putUpdateCrud
+    putUpdateCrud,
+    getDeleteCrud
 }
