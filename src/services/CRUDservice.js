@@ -80,6 +80,22 @@ const editUserById = (data) => {
     })
 }
 
+const deleteUserById = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await db.User.findOne({
+                where: {
+                    id: userId
+                }
+            })
+            await user.destroy()
+            resolve()
+        } catch (error) {
+            console.log(error)
+            reject()
+        }
+    })
+}
 const hashPassword = (password) => {
     const hashPassword = bcrypt.hashSync(password, salt);
     return hashPassword
@@ -89,5 +105,6 @@ module.exports = {
     createNewUser,
     getAllUser,
     getOneUserById,
-    editUserById
+    editUserById,
+    deleteUserById
 }
