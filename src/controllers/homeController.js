@@ -43,9 +43,43 @@ const displayCrud = async (req, res) => {
     }
 }
 
+const getEditCrud = async (req, res) => {
+    try {
+
+        const id = parseInt(req.query.id)
+        if (id) {
+            const data = await CRUDservice.getOneUserById(id)
+            return res.render("editCrud.ejs", {
+                data
+            })
+        }
+        else
+            return res.send("Sai thông tin")
+    } catch (error) {
+
+        console.log(error)
+    }
+}
+const putUpdateCrud = async (req, res) => {
+    try {
+        const userinfo = req.body
+        if (userinfo) {
+            const data = await CRUDservice.editUserById(userinfo)
+            console.log(data)
+            return res.render("displayUser.ejs", { data })
+        }
+        else
+            return res.send("Sai thong tin")
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     getHomePage,
     getCrud,
     postCrud,
-    displayCrud
+    displayCrud,
+    getEditCrud,
+    putUpdateCrud
 }
