@@ -14,7 +14,8 @@ const initWebRoutes = (app) => {
     router.post("/put-crud", homeController.putUpdateCrud)
     router.get("/delete-crud", homeController.getDeleteCrud)
 
-    router.post("/api/user", loginController.handleLogin)
+    router.post("/api/login", loginController.handleLogin)
+    router.get("/api/get-users", loginController.hanldeGetUsers)
 
     return app.use("/", router)
 }
