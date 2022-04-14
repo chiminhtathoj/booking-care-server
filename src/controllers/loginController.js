@@ -21,6 +21,24 @@ const handleLogin = async (req, res) => {
     })
 }
 
+const hanldeGetUsers = async (req, res) => {
+    const id = req.body.id
+    if (!id) {
+        return res.status(500).json({
+            errCode: 1,
+            message: "Missing parameter"
+        })
+    }
+    const users = await LoginService.getUsers(id)
+
+    return res.status(200).json({
+        errCode: 0,
+        message: "Get users was successed",
+        users
+    })
+}
+
 module.exports = {
-    handleLogin
+    handleLogin,
+    hanldeGetUsers
 }
