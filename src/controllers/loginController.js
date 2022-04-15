@@ -1,4 +1,5 @@
 import LoginService from "../services/loginService"
+
 const handleLogin = async (req, res) => {
 
     const email = req.body.email;
@@ -22,7 +23,7 @@ const handleLogin = async (req, res) => {
 }
 
 const hanldeGetUsers = async (req, res) => {
-    const id = req.body.id
+    const id = req.query.id
     if (!id) {
         return res.status(500).json({
             errCode: 1,
@@ -38,7 +39,51 @@ const hanldeGetUsers = async (req, res) => {
     })
 }
 
+
+const handleCreateNewUser = async (req, res) => {
+
+    const data = req.body
+    const newUser = await LoginService.createNewUser(data)
+    return res.status(200).json({
+        newUser
+    })
+
+}
+
+const handleDeleteUser = async (req, res) => {
+    const userId = req.body.id
+    if (!userId) {
+        return res.status(200).json({
+            errCode: 1,
+            message: "the user not found"
+        })
+    }
+    const userDeleted = await LoginService.deleteUser(userId)
+    return res.status(200).json({
+        errCode: userDeleted.errCode,
+        message: userDeleted.message
+    })
+}
+
+const handleEditUser = async (req, res) => {
+    const userInfo = req.body
+    if (!userInfo.id) {
+        return res.status(200).json({
+            errCode: 1,
+            message: "the user not found"
+        })
+    }
+    const userEdited = await LoginService.editUser(userInfo)
+    return res.status(200).json({
+        errCode: userEdited.errCode,
+        message: userEdited.message
+    })
+}
+
 module.exports = {
     handleLogin,
-    hanldeGetUsers
+    hanldeGetUsers,
+    handleCreateNewUser,
+    handleDeleteUser,
+    handleEditUser
 }
