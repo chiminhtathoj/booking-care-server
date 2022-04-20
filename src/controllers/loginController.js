@@ -31,7 +31,6 @@ const hanldeGetUsers = async (req, res) => {
         })
     }
     const users = await LoginService.getUsers(id)
-
     return res.status(200).json({
         errCode: 0,
         message: "Get users was successed",
@@ -45,7 +44,8 @@ const handleCreateNewUser = async (req, res) => {
     const data = req.body
     const newUser = await LoginService.createNewUser(data)
     return res.status(200).json({
-        newUser
+        errCode: newUser.errCode,
+        message: newUser.message
     })
 
 }

@@ -68,9 +68,7 @@ const getUsers = (userId) => {
             let user = ""
             if (userId === "ALL") {
                 user = await db.User.findAll({
-                    attributes: {
-                        excludes: ["password"]
-                    }
+                    attributes: { exclude: ['password'] }
                 })
             }
             if (userId !== "ALL" && userId) {
@@ -78,9 +76,7 @@ const getUsers = (userId) => {
                     where: {
                         id: userId
                     },
-                    attributes: {
-                        excludes: ["password"]
-                    }
+                    attributes: { exclude: ['password'] }
                 })
             }
 
@@ -102,17 +98,19 @@ const createNewUser = (userInfo) => {
                     message: "your email already taken"
                 })
             }
-            const password = hashPassword(userInfo.password)
-            await db.User.create({
-                email: userInfo.email,
-                phoneNumber: userInfo.phoneNumber,
-                password: password,
-                firstName: userInfo.firstName,
-                lastName: userInfo.lastName,
-                address: userInfo.address,
-                gender: userInfo.gender === "1" ? true : false,
-                roleId: userInfo.roleId,
-            })
+            else {
+                const password = hashPassword(userInfo.password)
+                await db.User.create({
+                    email: userInfo.email,
+                    phoneNumber: userInfo.phoneNumber,
+                    password: password,
+                    firstName: userInfo.firstName,
+                    lastName: userInfo.lastName,
+                    address: userInfo.address,
+                    gender: userInfo.gender === "1" ? true : false,
+                    roleId: userInfo.roleId,
+                })
+            }
             resolve({
                 errCode: 0,
                 message: "create new user succeed"
@@ -138,7 +136,8 @@ const deleteUser = (userId) => {
                     message: "the user not found!"
                 })
             }
-            user.destroy()
+            else
+                user.destroy()
             resolve({
                 errCode: 0,
                 message: "deleted"
@@ -156,7 +155,8 @@ const editUser = (userInfo) => {
                 where: {
                     id: userInfo.id
                 },
-                raw: false
+                raw: false,
+                attributes: { exclude: ['password'] }
             })
             if (!user) {
                 resolve({
