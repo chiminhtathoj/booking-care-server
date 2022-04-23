@@ -13,6 +13,18 @@ const handleGetAllCode = async (req, res) => {
     }
 }
 
+const handleCreateNewUser = async (req, res) => {
+
+    const data = req.body
+    const newUser = await userService.createNewUser(data)
+    return res.status(200).json({
+        errCode: newUser.errCode,
+        message: newUser.message
+    })
+
+}
+
 module.exports = {
-    handleGetAllCode
+    handleGetAllCode,
+    handleCreateNewUser
 }

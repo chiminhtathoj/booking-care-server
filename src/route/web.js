@@ -18,7 +18,7 @@ const initWebRoutes = (app) => {
     router.post("/api/login", loginController.handleLogin)
     router.get("/api/get-users", loginController.hanldeGetUsers)
 
-    router.put("/api/create-new-user", loginController.handleCreateNewUser)
+    router.put("/api/create-new-user", userController.handleCreateNewUser)
     router.delete("/api/delete-user", loginController.handleDeleteUser)
     router.patch("/api/edit-user", loginController.handleEditUser)
 

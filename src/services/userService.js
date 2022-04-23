@@ -2,6 +2,27 @@ import db from "../models/index"
 import bcrypt from "bcryptjs"
 const salt = bcrypt.genSaltSync(10);
 
+const checkUserEmail = (userEmail) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const isExist = await db.User.findOne({
+                where: { email: userEmail }
+            })
+            if (isExist)
+                resolve(true)
+            else
+                resolve(false)
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+const hashPassword = (password) => {
+    const hashPassword = bcrypt.hashSync(password, salt);
+    return hashPassword
+}
+
+
 const getAllCode = (inputType) => {
     return new Promise(async (resolve, reject) => {
         try {
@@ -27,7 +48,41 @@ const getAllCode = (inputType) => {
         }
     })
 }
+const createNewUser = (userInfo) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const isExist = await checkUserEmail(userInfo.email)
+            if (isExist) {
+                resolve({
+                    errCode: 1,
+                    message: "your email already taken"
+                })
+            }
+            else {
+                const password = hashPassword(userInfo.password)
+                await db.User.create({
+                    email: userInfo.email,
+                    phoneNumber: userInfo.phoneNumber,
+                    password: password,
+                    firstName: userInfo.firstName,
+                    lastName: userInfo.lastName,
+                    address: userInfo.address,
+                    gender: userInfo.gender,
+                    roleId: userInfo.role,
+                    positionId: userInfo.position
+                })
+            }
+            resolve({
+                errCode: 0,
+                message: "create new user succeed"
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 
 module.exports = {
-    getAllCode
+    getAllCode,
+    createNewUser
 }

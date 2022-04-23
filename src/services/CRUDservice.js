@@ -14,7 +14,7 @@ const createNewUser = (data) => {
                 firstName: data.firstname,
                 lastName: data.lastname,
                 address: data.address,
-                gender: data.gender === "1" ? true : false,
+                gender: data.gender,
                 roleId: data.roleid,
             })
             resolve("created new user")
