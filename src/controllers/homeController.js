@@ -28,6 +28,7 @@ const postCrud = async (req, res) => {
 
     }
     catch (error) {
+
         console.log(error)
     }
 }

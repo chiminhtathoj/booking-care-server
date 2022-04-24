@@ -51,31 +51,41 @@ const getAllCode = (inputType) => {
 const createNewUser = (userInfo) => {
     return new Promise(async (resolve, reject) => {
         try {
-            const isExist = await checkUserEmail(userInfo.email)
-            if (isExist) {
+            if (userInfo) {
+                const isExist = await checkUserEmail(userInfo.email)
+                if (isExist) {
+                    resolve({
+                        errCode: 1,
+                        message: "your email already taken"
+                    })
+                }
+                else {
+                    const password = hashPassword(userInfo.password)
+                    await db.User.create({
+                        email: userInfo.email,
+                        phoneNumber: userInfo.phoneNumber,
+                        password: password,
+                        firstName: userInfo.firstName,
+                        lastName: userInfo.lastName,
+                        address: userInfo.address,
+                        gender: userInfo.gender,
+                        roleId: userInfo.roleId,
+                        positionId: userInfo.positionId,
+                        image: userInfo.image
+                    })
+                }
                 resolve({
-                    errCode: 1,
-                    message: "your email already taken"
+                    errCode: 0,
+                    message: "create new user succeed"
                 })
             }
             else {
-                const password = hashPassword(userInfo.password)
-                await db.User.create({
-                    email: userInfo.email,
-                    phoneNumber: userInfo.phoneNumber,
-                    password: password,
-                    firstName: userInfo.firstName,
-                    lastName: userInfo.lastName,
-                    address: userInfo.address,
-                    gender: userInfo.gender,
-                    roleId: userInfo.role,
-                    positionId: userInfo.position
+                resolve({
+                    errCode: 2,
+                    message: "invalid input"
                 })
             }
-            resolve({
-                errCode: 0,
-                message: "create new user succeed"
-            })
+
         } catch (error) {
             reject(error)
         }

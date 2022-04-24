@@ -39,16 +39,7 @@ const hanldeGetUsers = async (req, res) => {
 }
 
 
-const handleCreateNewUser = async (req, res) => {
 
-    const data = req.body
-    const newUser = await LoginService.createNewUser(data)
-    return res.status(200).json({
-        errCode: newUser.errCode,
-        message: newUser.message
-    })
-
-}
 
 const handleDeleteUser = async (req, res) => {
     const userId = req.body.id
@@ -83,7 +74,6 @@ const handleEditUser = async (req, res) => {
 module.exports = {
     handleLogin,
     hanldeGetUsers,
-    handleCreateNewUser,
     handleDeleteUser,
     handleEditUser
 }

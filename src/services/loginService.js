@@ -83,7 +83,6 @@ const getUsers = (userId) => {
                     attributes: { exclude: ['password'] }
                 })
             }
-
             resolve(user)
         } catch (error) {
             reject(error)
