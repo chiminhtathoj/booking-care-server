@@ -66,98 +66,10 @@ const handleLogin = (email, password) => {
     })
 }
 
-const getUsers = (userId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            let user = ""
-            if (userId === "ALL") {
-                user = await db.User.findAll({
-                    attributes: { exclude: ['password'] }
-                })
-            }
-            if (userId !== "ALL" && userId) {
-                user = await db.User.findOne({
-                    where: {
-                        id: userId
-                    },
-                    attributes: { exclude: ['password'] }
-                })
-            }
-            resolve(user)
-        } catch (error) {
-            reject(error)
-        }
 
-    })
-}
-
-
-
-const deleteUser = (userId) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const user = await db.User.findOne({
-                where: {
-                    id: userId
-                },
-                raw: false
-            })
-            if (!user) {
-                resolve({
-                    errCode: 2,
-                    message: "the user not found!"
-                })
-            }
-            else
-                user.destroy()
-            resolve({
-                errCode: 0,
-                message: "deleted"
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-}
-
-const editUser = (userInfo) => {
-    return new Promise(async (resolve, reject) => {
-        try {
-            const user = await db.User.findOne({
-                where: {
-                    id: userInfo.id
-                },
-                raw: false,
-                attributes: { exclude: ['password'] }
-            })
-            if (!user) {
-                resolve({
-                    errCode: 2,
-                    message: "the user not found!"
-                })
-            }
-            else {
-                user.email = userInfo.email,
-                    user.firstName = userInfo.firstName,
-                    user.lastName = userInfo.lastName
-
-                await user.save()
-            }
-            resolve({
-                errCode: 0,
-                message: "edit succeed"
-            })
-        } catch (error) {
-            reject(error)
-        }
-    })
-}
 
 
 
 module.exports = {
-    handleLogin,
-    getUsers,
-    deleteUser,
-    editUser
+    handleLogin
 }

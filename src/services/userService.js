@@ -91,8 +91,108 @@ const createNewUser = (userInfo) => {
         }
     })
 }
+const getUsers = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let user = ""
+            if (userId === "ALL") {
+                user = await db.User.findAll({
+                    attributes: { exclude: ['password'] }
+                })
+            }
+            if (userId !== "ALL" && userId) {
+                user = await db.User.findOne({
+                    where: {
+                        id: userId
+                    },
+                    attributes: { exclude: ['password'] }
+                })
+            }
+            resolve(user)
+        } catch (error) {
+            reject(error)
+        }
+
+    })
+}
+
+const deleteUser = (userId) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            const user = await db.User.findOne({
+                where: {
+                    id: userId
+                },
+                raw: false
+            })
+            if (!user) {
+                resolve({
+                    errCode: 2,
+                    message: "the user not found!"
+                })
+            }
+            else
+                user.destroy()
+            resolve({
+                errCode: 0,
+                message: "deleted"
+            })
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+const editUser = (userInfo) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (userInfo.id || userInfo.roleId || userInfo.positionId || userInfo.gender) {
+                const user = await db.User.findOne({
+                    where: {
+                        id: userInfo.id
+                    },
+                    raw: false,
+                    attributes: { exclude: ['password'] }
+                })
+                if (!user) {
+                    resolve({
+                        errCode: 2,
+                        message: "the user not found!"
+                    })
+                }
+                else {
+                    user.firstName = userInfo.firstName,
+                        user.lastName = userInfo.lastName,
+                        user.address = userInfo.address,
+                        user.phoneNumber = userInfo.phoneNumber,
+                        user.roleId = userInfo.roleId,
+                        user.positionId = userInfo.positionId,
+                        user.gender = userInfo.gender
+
+                    await user.save()
+                }
+                resolve({
+                    errCode: 0,
+                    message: "edit succeed"
+                })
+            }
+            else {
+                resolve({
+                    errCode: 1,
+                    message: "missing parameter"
+                })
+            }
+
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 
 module.exports = {
     getAllCode,
-    createNewUser
+    createNewUser,
+    getUsers,
+    deleteUser,
+    editUser
 }

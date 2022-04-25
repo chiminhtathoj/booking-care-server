@@ -16,11 +16,11 @@ const initWebRoutes = (app) => {
     router.get("/delete-crud", homeController.getDeleteCrud)
 
     router.post("/api/login", loginController.handleLogin)
-    router.get("/api/get-users", loginController.hanldeGetUsers)
+    router.get("/api/get-users", userController.hanldeGetUsers)
 
     router.put("/api/create-new-user", userController.handleCreateNewUser)
-    router.delete("/api/delete-user", loginController.handleDeleteUser)
-    router.patch("/api/edit-user", loginController.handleEditUser)
+    router.delete("/api/delete-user", userController.handleDeleteUser)
+    router.patch("/api/edit-user", userController.handleEditUser)
 
 
     router.get("/api/get-allcode", userController.handleGetAllCode)
