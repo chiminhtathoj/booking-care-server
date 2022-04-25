@@ -26,9 +26,17 @@ app.use(function (req, res, next) {
     next();
 });
 
-app.use(bodyParser.urlencoded({ extended: true }))
-// parse application/json
-app.use(bodyParser.json())
+// app.use(bodyParser.urlencoded({ extended: true }))
+// // parse application/json
+// app.use(bodyParser.json())
+
+//cau hinh cho expres luu file > 50mb
+app.use(bodyParser.json({ limit: '150mb' }));
+app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
+    limit: '150mb',
+    extended: true
+}));
+
 const whitelist = ['http://localhost:3000/', 'http://example2.com']
 configViewEngine(app)
 initWebRoutes(app)

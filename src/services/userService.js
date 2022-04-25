@@ -168,6 +168,9 @@ const editUser = (userInfo) => {
                         user.roleId = userInfo.roleId,
                         user.positionId = userInfo.positionId,
                         user.gender = userInfo.gender
+                    if (userInfo.image) {
+                        user.image = userInfo.image
+                    }
 
                     await user.save()
                 }
