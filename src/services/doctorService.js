@@ -22,7 +22,12 @@ const getTopDoctor = (limitOutput) => {
                 nest: true
 
             })
-            resolve(doctor)
+            resolve(
+                {
+                    errCode: 0,
+                    message: "get top doctor successed",
+                    data: doctor
+                })
         } catch (error) {
             reject({
                 errCode: 1,
@@ -31,6 +36,66 @@ const getTopDoctor = (limitOutput) => {
         }
     })
 }
+const getAllDoctor = () => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            let allDoctor = ""
+            allDoctor = await db.User.findAll({
+                where: {
+                    roleId: "R2"
+                },
+                attributes: {
+                    exclude: ["password", "image"],
+
+                }
+            })
+            resolve({
+                errCode: 0,
+                message: "get all doctor successed",
+                data: allDoctor
+            })
+        } catch (error) {
+            console.log(error)
+            reject({
+                errCode: 1,
+                message: "Fail to get all doctor in doctorservice"
+            })
+        }
+    })
+}
+
+const createInfoDoctor = (infoDoctor) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!infoDoctor.doctorId || !infoDoctor.contentHTML || !infoDoctor.contentMarkdown) {
+                resolve({
+                    errCode: 2,
+                    message: "Fail to save info doctor in doctor service(input not enough!)"
+                })
+            }
+            else {
+                await db.Markdown.create({
+                    contentHTML: infoDoctor.contentHTML,
+                    contentMarkdown: infoDoctor.contentMarkdown,
+                    description: infoDoctor.description,
+                    doctorId: infoDoctor.doctorId
+                })
+                resolve({
+                    errCode: 0,
+                    message: "create info doctor successed"
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            reject({
+                errCode: 1,
+                message: "Fail to save info doctor in doctor service"
+            })
+        }
+    })
+}
 module.exports = {
-    getTopDoctor
+    getTopDoctor,
+    getAllDoctor,
+    createInfoDoctor
 }

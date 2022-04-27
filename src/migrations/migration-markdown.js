@@ -22,15 +22,15 @@ module.exports = {
             },
             doctorId: {
                 type: Sequelize.INTEGER,
-                allowNull: false
+                allowNull: true
             },
             specialtyId: {
                 type: Sequelize.INTEGER,
-                allowNull: false
+                allowNull: true
             },
             clinicId: {
                 type: Sequelize.INTEGER,
-                allowNull: false
+                allowNull: true
             },
             createdAt: {
                 allowNull: false,
