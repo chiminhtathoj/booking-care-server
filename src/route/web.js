@@ -16,10 +16,9 @@ const initWebRoutes = (app) => {
     router.get("/edit-crud", homeController.getEditCrud)
     router.post("/put-crud", homeController.putUpdateCrud)
     router.get("/delete-crud", homeController.getDeleteCrud)
-
     router.post("/api/login", loginController.handleLogin)
-    router.get("/api/get-users", userController.hanldeGetUsers)
     //user
+    router.get("/api/get-users", userController.hanldeGetUsers)
     router.put("/api/create-new-user", userController.handleCreateNewUser)
     router.delete("/api/delete-user", userController.handleDeleteUser)
     router.patch("/api/edit-user", userController.handleEditUser)
@@ -31,6 +30,7 @@ const initWebRoutes = (app) => {
     router.get("/api/get-top-doctor", doctorController.handleGetTopDoctor)
     router.get("/api/get-all-doctor", doctorController.handleGetAllDoctor)
     router.post("/api/create-info-doctor", doctorController.handleCreateInfoDoctor)
+    router.get("/api/get-detail-doctor", doctorController.handleGetDetailDoctorById)
 
 
     return app.use("/", router)
