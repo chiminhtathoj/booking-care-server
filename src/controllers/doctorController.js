@@ -99,9 +99,30 @@ const handleGetDetailDoctorById = async (req, res) => {
         })
     }
 }
+
+const handleGetMarkdownDoctorById = async (req, res) => {
+    try {
+        const idDoctor = req.query.id
+        const markdownDoctor = await doctorService.getMarkdownDoctorById(idDoctor)
+        if (markdownDoctor && markdownDoctor.errCode === 0) {
+            res.status(200).json({
+                errCode: markdownDoctor.errCode,
+                message: markdownDoctor.message,
+                data: markdownDoctor.data
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            errCode: 1,
+            message: "get markdown doctor by controller failed!"
+        })
+    }
+}
 module.exports = {
     handleGetTopDoctor,
     handleGetAllDoctor,
     handleCreateInfoDoctor,
-    handleGetDetailDoctorById
+    handleGetDetailDoctorById,
+    handleGetMarkdownDoctorById
 }

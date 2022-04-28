@@ -67,13 +67,13 @@ const getAllDoctor = () => {
 const createInfoDoctor = (infoDoctor) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!infoDoctor.doctorId || !infoDoctor.contentHTML || !infoDoctor.contentMarkdown) {
+            if (!infoDoctor.doctorId || !infoDoctor.contentHTML || !infoDoctor.contentMarkdown || !infoDoctor.action) {
                 resolve({
                     errCode: 2,
                     message: "Fail to save info doctor in doctor service(input not enough!)"
                 })
             }
-            else {
+            else if (infoDoctor.action === "CREATE") {
                 await db.Markdown.create({
                     contentHTML: infoDoctor.contentHTML,
                     contentMarkdown: infoDoctor.contentMarkdown,
@@ -84,6 +84,20 @@ const createInfoDoctor = (infoDoctor) => {
                     errCode: 0,
                     message: "create info doctor successed"
                 })
+            }
+            else if (infoDoctor.action === "EDIT") {
+                const markdown = await db.Markdown.findOne({
+                    where: {
+                        doctorId: infoDoctor.doctorId
+                    },
+                    raw: false
+                })
+                if (markdown) {
+                    markdown.contentHTML = infoDoctor.contentHTML,
+                        markdown.contentMarkdown = infoDoctor.contentMarkdown,
+                        markdown.description = infoDoctor.description
+                    await markdown.save()
+                }
             }
         } catch (error) {
             console.log(error)
@@ -144,9 +158,44 @@ const getDetailDoctorById = (idDoctor) => {
         }
     })
 }
+
+const getMarkdownDoctorById = (idDoctor) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!idDoctor) {
+                resolve({
+                    errCode: 2,
+                    message: "Missing parameter"
+                })
+            }
+            else {
+                const data = await db.Markdown.findOne({
+                    where: {
+                        doctorId: idDoctor
+                    },
+                    attributes: {
+                        exclude: ["specialtyId", "clinicId"],
+                    },
+                })
+                resolve({
+                    errCode: 0,
+                    message: "Get Markdown doctor by id succeed",
+                    data
+                })
+            }
+        } catch (error) {
+            console.log(error)
+            reject({
+                errCode: 1,
+                message: "Fail to Get Markdown doctor by id in doctor service"
+            })
+        }
+    })
+}
 module.exports = {
     getTopDoctor,
     getAllDoctor,
     createInfoDoctor,
-    getDetailDoctorById
+    getDetailDoctorById,
+    getMarkdownDoctorById
 }

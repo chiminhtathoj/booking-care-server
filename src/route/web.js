@@ -31,6 +31,7 @@ const initWebRoutes = (app) => {
     router.get("/api/get-all-doctor", doctorController.handleGetAllDoctor)
     router.post("/api/create-info-doctor", doctorController.handleCreateInfoDoctor)
     router.get("/api/get-detail-doctor", doctorController.handleGetDetailDoctorById)
+    router.get("/api/get-markdown-doctor", doctorController.handleGetMarkdownDoctorById)
 
 
     return app.use("/", router)
