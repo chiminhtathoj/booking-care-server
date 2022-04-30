@@ -119,10 +119,52 @@ const handleGetMarkdownDoctorById = async (req, res) => {
         })
     }
 }
+
+const handleCreateBulkSchedule = async (req, res) => {
+    try {
+        const data = req.body
+        let schedule = await doctorService.createBulkSchedule(data)
+        if (schedule && schedule.errCode === 0) {
+            res.status(200).json({
+                errCode: schedule.errCode,
+                message: schedule.message
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            errCode: 1,
+            message: "create bulkschedule by controller failed!"
+        })
+    }
+}
+
+const handleGetScheduleDoctor = async (req, res) => {
+    try {
+        const data = req.query
+        let scheduleDoctor = await doctorService.getScheduleDoctorById(data.idDoctor, data.date)
+        if (scheduleDoctor && scheduleDoctor.errCode === 0) {
+            res.status(200).json({
+                errCode: scheduleDoctor.errCode,
+                message: scheduleDoctor.message,
+                data: scheduleDoctor.data
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            errCode: 1,
+            message: "get schedule doctor by controller failed!"
+        })
+    }
+}
+
 module.exports = {
     handleGetTopDoctor,
     handleGetAllDoctor,
     handleCreateInfoDoctor,
     handleGetDetailDoctorById,
-    handleGetMarkdownDoctorById
+    handleGetMarkdownDoctorById,
+    handleCreateBulkSchedule,
+    handleGetScheduleDoctor
 }
