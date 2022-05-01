@@ -67,41 +67,81 @@ const getAllDoctor = () => {
         }
     })
 }
-
+//create and update if exist
 const createInfoDoctor = (infoDoctor) => {
     return new Promise(async (resolve, reject) => {
         try {
-            if (!infoDoctor.doctorId || !infoDoctor.contentHTML || !infoDoctor.contentMarkdown || !infoDoctor.action) {
+            if (!infoDoctor.doctorId || !infoDoctor.contentHTML || !infoDoctor.contentMarkdown || !infoDoctor.action
+                || !infoDoctor.priceId || !infoDoctor.paymentId || !infoDoctor.provinceId || !infoDoctor.nameClinic || !infoDoctor.addressClinic
+            ) {
                 resolve({
                     errCode: 2,
                     message: "Fail to save info doctor in doctor service(input not enough!)"
                 })
             }
-            else if (infoDoctor.action === "CREATE") {
-                await db.Markdown.create({
-                    contentHTML: infoDoctor.contentHTML,
-                    contentMarkdown: infoDoctor.contentMarkdown,
-                    description: infoDoctor.description,
-                    doctorId: infoDoctor.doctorId
-                })
-                resolve({
-                    errCode: 0,
-                    message: "create info doctor successed"
-                })
-            }
-            else if (infoDoctor.action === "EDIT") {
-                const markdown = await db.Markdown.findOne({
+            else {
+                if (infoDoctor.action === "CREATE") {
+                    await db.Markdown.create({
+                        contentHTML: infoDoctor.contentHTML,
+                        contentMarkdown: infoDoctor.contentMarkdown,
+                        description: infoDoctor.description,
+                        doctorId: infoDoctor.doctorId
+                    })
+                    await db.Doctor_Info.create({
+                        doctorId: infoDoctor.doctorId,
+                        priceId: infoDoctor.priceId,
+                        paymentId: infoDoctor.paymentId,
+                        provinceId: infoDoctor.provinceId,
+                        nameClinic: infoDoctor.nameClinic,
+                        addressClinic: infoDoctor.addressClinic,
+                        note: infoDoctor.note
+                    })
+                }
+                else if (infoDoctor.action === "EDIT") {
+                    const markdown = await db.Markdown.findOne({
+                        where: {
+                            doctorId: infoDoctor.doctorId
+                        },
+                        raw: false
+                    })
+                    if (markdown) {
+                        markdown.contentHTML = infoDoctor.contentHTML,
+                            markdown.contentMarkdown = infoDoctor.contentMarkdown,
+                            markdown.description = infoDoctor.description
+                        await markdown.save()
+                    }
+                }
+                const doctorInfo = await db.Doctor_Info.findOne({
                     where: {
                         doctorId: infoDoctor.doctorId
                     },
                     raw: false
                 })
-                if (markdown) {
-                    markdown.contentHTML = infoDoctor.contentHTML,
-                        markdown.contentMarkdown = infoDoctor.contentMarkdown,
-                        markdown.description = infoDoctor.description
-                    await markdown.save()
+                if (doctorInfo) {
+                    doctorInfo.doctorId = infoDoctor.doctorId
+                    doctorInfo.priceId = infoDoctor.priceId,
+                        doctorInfo.paymentId = infoDoctor.paymentId,
+                        doctorInfo.provinceId = infoDoctor.provinceId,
+                        doctorInfo.nameClinic = infoDoctor.nameClinic,
+                        doctorInfo.addressClinic = infoDoctor.addressClinic,
+                        doctorInfo.note = infoDoctor.note
+                    await doctorInfo.save()
                 }
+                else {
+                    await db.Doctor_Info.create({
+                        doctorId: infoDoctor.doctorId,
+                        priceId: infoDoctor.priceId,
+                        paymentId: infoDoctor.paymentId,
+                        provinceId: infoDoctor.provinceId,
+                        nameClinic: infoDoctor.nameClinic,
+                        addressClinic: infoDoctor.addressClinic,
+                        note: infoDoctor.note
+                    })
+                }
+                resolve({
+                    errCode: 0,
+                    message: "create info doctor successed"
+                })
             }
         } catch (error) {
             console.log(error)
@@ -139,6 +179,17 @@ const getDetailDoctorById = (idDoctor) => {
                             model: db.Allcode,
                             attributes: ["valueEn", "valueVi"],
                             as: "positionData",
+                        },
+                        {
+                            model: db.Doctor_Info,
+                            attributes: {
+                                exclude: ["id", "doctorId"]
+                            },
+                            include: [
+                                { model: db.Allcode, as: "priceData", attributes: ["valueEn", "valueVi"] },
+                                { model: db.Allcode, as: "provinceData", attributes: ["valueEn", "valueVi"] },
+                                { model: db.Allcode, as: "paymentData", attributes: ["valueEn", "valueVi"] },
+                            ]
                         }
                     ],
                     raw: false,
