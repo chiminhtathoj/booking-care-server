@@ -23,7 +23,6 @@ const initWebRoutes = (app) => {
     router.delete("/api/delete-user", userController.handleDeleteUser)
     router.patch("/api/edit-user", userController.handleEditUser)
     router.get("/api/get-allcode", userController.handleGetAllCode)
-    router.get("/api/get-allcode", userController.handleGetAllCode)
 
     //doctor
 
