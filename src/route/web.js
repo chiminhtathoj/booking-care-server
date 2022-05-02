@@ -33,6 +33,7 @@ const initWebRoutes = (app) => {
     router.get("/api/get-markdown-doctor", doctorController.handleGetMarkdownDoctorById)
     router.post("/api/create-bulk-schedule", doctorController.handleCreateBulkSchedule)
     router.get("/api/get-schedule-doctor", doctorController.handleGetScheduleDoctor)
+    router.get("/api/get-extra-info-doctor-by-id", doctorController.handleGetExtraInfoDoctorById)
 
 
 

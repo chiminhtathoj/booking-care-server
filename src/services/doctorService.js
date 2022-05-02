@@ -329,6 +329,56 @@ const getScheduleDoctorById = (idDoctor, date) => {
         }
     })
 }
+
+const getExtraInfoDoctorById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve({
+                    errCode: 1,
+                    message: "Missing parameter"
+                })
+            }
+            else {
+                let dataExtraInfo = await db.Doctor_Info.findOne({
+                    where: {
+                        doctorId: id
+                    },
+                    attributes: {
+                        exclude: ["id", "doctorId"],
+                    },
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: "priceData",
+                            attributes: ["valueEn", "valueVi"]
+                        },
+                        {
+                            model: db.Allcode,
+                            as: "provinceData",
+                            attributes: ["valueEn", "valueVi"]
+                        },
+                        {
+                            model: db.Allcode,
+                            as: "paymentData",
+                            attributes: ["valueEn", "valueVi"]
+                        }
+                    ],
+                    raw: false,
+                    nested: true
+                })
+                if (!dataExtraInfo)
+                    dataExtraInfo = {}
+                resolve({
+                    errCode: 0,
+                    data: dataExtraInfo
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
 module.exports = {
     getTopDoctor,
     getAllDoctor,
@@ -336,5 +386,6 @@ module.exports = {
     getDetailDoctorById,
     getMarkdownDoctorById,
     createBulkSchedule,
-    getScheduleDoctorById
+    getScheduleDoctorById,
+    getExtraInfoDoctorById
 }
