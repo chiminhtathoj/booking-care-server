@@ -3,6 +3,7 @@ import homeController from "../controllers/homeController"
 import loginController from "../controllers/loginController"
 import userController from "../controllers/userController"
 import doctorController from "../controllers/doctorController"
+import patientController from "../controllers/patientController"
 
 
 
@@ -33,6 +34,11 @@ const initWebRoutes = (app) => {
     router.get("/api/get-markdown-doctor", doctorController.handleGetMarkdownDoctorById)
     router.post("/api/create-bulk-schedule", doctorController.handleCreateBulkSchedule)
     router.get("/api/get-schedule-doctor", doctorController.handleGetScheduleDoctor)
+    router.get("/api/get-extra-info-doctor-by-id", doctorController.handleGetExtraInfoDoctorById)
+    router.get("/api/get-profile-doctor-by-id", doctorController.handleGetProfileDoctorById)
+
+    //patient
+    router.post("/api/find-or-create-appointment", patientController.postBookAppointment)
 
 
 

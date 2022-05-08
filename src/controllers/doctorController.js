@@ -159,6 +159,45 @@ const handleGetScheduleDoctor = async (req, res) => {
     }
 }
 
+const handleGetExtraInfoDoctorById = async (req, res) => {
+    try {
+        const doctorId = req.query.id
+        let extraInfoDoctor = await doctorService.getExtraInfoDoctorById(doctorId)
+        if (extraInfoDoctor && extraInfoDoctor.errCode === 0) {
+            res.status(200).json({
+                errCode: extraInfoDoctor.errCode,
+                message: extraInfoDoctor.message,
+                data: extraInfoDoctor.data
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            errCode: 1,
+            message: "get extra info doctor by controller failed!"
+        })
+    }
+}
+
+const handleGetProfileDoctorById = async (req, res) => {
+    try {
+        const idDoctor = req.query.id
+        const infoDoctor = await doctorService.getProfileDoctorById(idDoctor)
+        if (infoDoctor && infoDoctor.errCode === 0) {
+            res.status(200).json({
+                errCode: infoDoctor.errCode,
+                message: "get detail doctor by controller success",
+                data: infoDoctor.data
+            })
+        }
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            errCode: 1,
+            message: "get extra info doctor by controller failed!"
+        })
+    }
+}
 module.exports = {
     handleGetTopDoctor,
     handleGetAllDoctor,
@@ -166,5 +205,7 @@ module.exports = {
     handleGetDetailDoctorById,
     handleGetMarkdownDoctorById,
     handleCreateBulkSchedule,
-    handleGetScheduleDoctor
+    handleGetScheduleDoctor,
+    handleGetExtraInfoDoctorById,
+    handleGetProfileDoctorById
 }

@@ -329,6 +329,115 @@ const getScheduleDoctorById = (idDoctor, date) => {
         }
     })
 }
+
+const getExtraInfoDoctorById = (id) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!id) {
+                resolve({
+                    errCode: 1,
+                    message: "Missing parameter"
+                })
+            }
+            else {
+                let dataExtraInfo = await db.Doctor_Info.findOne({
+                    where: {
+                        doctorId: id
+                    },
+                    attributes: {
+                        exclude: ["id", "doctorId"],
+                    },
+                    include: [
+                        {
+                            model: db.Allcode,
+                            as: "priceData",
+                            attributes: ["valueEn", "valueVi"]
+                        },
+                        {
+                            model: db.Allcode,
+                            as: "provinceData",
+                            attributes: ["valueEn", "valueVi"]
+                        },
+                        {
+                            model: db.Allcode,
+                            as: "paymentData",
+                            attributes: ["valueEn", "valueVi"]
+                        }
+                    ],
+                    raw: false,
+                    nested: true
+                })
+                if (!dataExtraInfo)
+                    dataExtraInfo = {}
+                resolve({
+                    errCode: 0,
+                    data: dataExtraInfo
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+}
+
+const getProfileDoctorById = (idDoctor) => {
+    return new Promise(async (resolve, reject) => {
+        try {
+            if (!idDoctor) {
+                resolve({
+                    errCode: 1,
+                    message: "Missing parameter"
+                })
+            }
+            else {
+                const data = await db.User.findOne({
+                    where: {
+                        id: idDoctor
+                    },
+                    attributes: {
+                        exclude: ["password"],
+                    },
+                    include: [
+                        {
+                            model: db.Markdown,
+                            attributes: ["description", "contentHTML", "contentMarkdown"]
+                        },
+                        {
+                            model: db.Allcode,
+                            attributes: ["valueEn", "valueVi"],
+                            as: "positionData",
+                        },
+                        {
+                            model: db.Doctor_Info,
+                            attributes: {
+                                exclude: ["id", "doctorId"]
+                            },
+                            include: [
+
+                                { model: db.Allcode, as: "priceData", attributes: ["valueEn", "valueVi"] },
+                                { model: db.Allcode, as: "provinceData", attributes: ["valueEn", "valueVi"] },
+                                { model: db.Allcode, as: "paymentData", attributes: ["valueEn", "valueVi"] },
+                            ]
+                        }
+                    ],
+                    raw: false,
+                    nested: true
+                })
+                if (data && data.image) {
+                    data.image = new Buffer.from(data.image, "base64").toString("binary");
+                }
+                resolve({
+                    errCode: 0,
+                    message: "Get detail doctor succeed",
+                    data
+                })
+            }
+        } catch (error) {
+            reject(error)
+        }
+    })
+
+}
 module.exports = {
     getTopDoctor,
     getAllDoctor,
@@ -336,5 +445,7 @@ module.exports = {
     getDetailDoctorById,
     getMarkdownDoctorById,
     createBulkSchedule,
-    getScheduleDoctorById
+    getScheduleDoctorById,
+    getExtraInfoDoctorById,
+    getProfileDoctorById
 }
